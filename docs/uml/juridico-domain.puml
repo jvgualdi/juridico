@@ -1,0 +1,107 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+' ENUMS
+enum ActionType {
+    PETITION
+    AUDIENCE
+    SENTENCE
+    + toString()
+    + fromDescription(String)
+}
+
+enum ParticipantsType {
+    AUTHOR
+    DEFENDANT
+    LAWYER
+    + toString()
+    + fromString(String)
+}
+
+enum ProcessStatus {
+    ACTIVE
+    SUSPENDED
+    ARCHIVED
+    + toString()
+    + fromLabel(String)
+}
+
+' EMBEDDABLES
+class ContactInformation {
+    - email : String
+    - phoneNumber : String
+}
+
+class ParticipationKey {
+    - processId : Long
+    - participantId : UUID
+    + equals(Object) : boolean
+    + hashCode() : int
+}
+
+' ENTITIES
+class LegalProcess {
+    - id : Long
+    - description : String
+    - creationDate : LocalDateTime
+    - lastUpdateDate : LocalDateTime
+    - status : ProcessStatus
+    -- participations : List<ProcessParticipation>
+    -- actions : List<LegalActions>
+}
+
+class Participants {
+    - id : UUID
+    - fullName : String
+    - cpfCnpj : String
+    - contactInformation : ContactInformation
+    -- participations : List<ProcessParticipation>
+}
+
+class ProcessParticipation {
+    - id : ParticipationKey
+    - role : ParticipantsType
+    - participationDate : LocalDateTime
+    -- process : LegalProcess
+    -- participant : Participants
+}
+
+class LegalActions {
+    - id : UUID
+    - type : ActionType
+    - registrationDate : LocalDateTime
+    - description : String
+    -- process : LegalProcess
+}
+
+' RELATIONSHIPS
+
+' LegalProcess ----< ProcessParticipation
+LegalProcess "1" o-- "0..*" ProcessParticipation : participations
+
+' Participants ----< ProcessParticipation
+Participants "1" o-- "0..*" ProcessParticipation : participations
+
+' LegalProcess ----< LegalActions
+LegalProcess "1" o-- "0..*" LegalActions : actions
+
+' ProcessParticipation --> ParticipationKey
+ProcessParticipation *-- ParticipationKey
+
+' Participants --> ContactInformation
+Participants *-- ContactInformation
+
+' ProcessParticipation --> LegalProcess : process
+' ProcessParticipation --> Participants : participant
+ProcessParticipation --> LegalProcess
+ProcessParticipation --> Participants
+
+' LegalActions --> LegalProcess : process
+LegalActions --> LegalProcess
+
+' ENUM USAGE (<< FIXED HERE >>)
+LegalActions --> ActionType : type
+LegalProcess --> ProcessStatus : status
+ProcessParticipation --> ParticipantsType : role
+
+@enduml

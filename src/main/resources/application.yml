@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: juridico
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  datasource:
+      url: jdbc:postgresql://localhost:5432/juridico
+      username: postgres
+      password: ${DB_PASSWORD:1403}
+      driver-class-name: org.postgresql.Driver
+
+
+server:
+  port: 8080
+  error:
+    include-stacktrace: never
