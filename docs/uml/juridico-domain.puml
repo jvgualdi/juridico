@@ -91,17 +91,13 @@ ProcessParticipation *-- ParticipationKey
 ' Participants --> ContactInformation
 Participants *-- ContactInformation
 
-' ProcessParticipation --> LegalProcess : process
-' ProcessParticipation --> Participants : participant
-ProcessParticipation --> LegalProcess
-ProcessParticipation --> Participants
+' LegalActions --> LegalProcess
+LegalActions --> LegalProcess : process
 
-' LegalActions --> LegalProcess : process
-LegalActions --> LegalProcess
+' ProcessParticipation --> LegalProcess
+ProcessParticipation --> LegalProcess : process
 
-' ENUM USAGE (<< FIXED HERE >>)
-LegalActions --> ActionType : type
-LegalProcess --> ProcessStatus : status
-ProcessParticipation --> ParticipantsType : role
+' ProcessParticipation --> Participants
+ProcessParticipation --> Participants : participant
 
 @enduml
